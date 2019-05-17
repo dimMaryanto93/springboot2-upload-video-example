@@ -1,4 +1,4 @@
-package com.maryanto.dimas.example.service;
+package com.maryanto.dimas.example.utils;
 
 import lombok.extern.slf4j.Slf4j;
 import net.bramp.ffmpeg.FFmpeg;
@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Service
-public class CompressedMediaVideoService {
+public class CompressedMediaVideoUtil {
 
     FFmpeg ffmpeg = null;
     FFprobe ffprobe = null;
@@ -30,7 +30,7 @@ public class CompressedMediaVideoService {
         return System.getProperty("user.home");
     }
 
-    public CompressedMediaVideoService(
+    public CompressedMediaVideoUtil(
             @Value("${server.compression.ffmpeg}") String ffmpegPath,
             @Value("${server.compression.ffprobe}") String ffprobePath) throws IOException {
         ffmpeg = new FFmpeg();
@@ -43,7 +43,7 @@ public class CompressedMediaVideoService {
 
     }
 
-    public void convertVideo(String fileName, String format) throws IOException {
+    public String convertVideo(String fileName, String format) throws IOException {
         String dirPath = new StringBuilder(getHomeDirectory()).append(File.separator)
                 .append("Videos").append(File.separator)
                 .append("compressed").append(File.separator)
@@ -54,12 +54,13 @@ public class CompressedMediaVideoService {
             dir.mkdirs();
         }
 
+        String outputLocation = new StringBuilder(dirPath)
+                .append(File.separator).append(UUID.randomUUID().toString()).append(".").append(format).toString();
         FFmpegProbeResult input = ffprobe.probe(fileName);
         FFmpegBuilder builder = new FFmpegBuilder()
                 .setInput(input).overrideOutputFiles(true)
 
-                .addOutput(new StringBuilder(dirPath)
-                        .append(File.separator).append(UUID.randomUUID().toString()).append(".").append(format).toString())
+                .addOutput(outputLocation)
                 .setFormat(format)
                 .disableSubtitle()
 
@@ -98,6 +99,7 @@ public class CompressedMediaVideoService {
                 }
             }
         }).run();
+        return outputLocation;
     }
 
 

@@ -1,4 +1,4 @@
-package com.maryanto.dimas.example.service;
+package com.maryanto.dimas.example.utils;
 
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Service;
@@ -13,7 +13,7 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 @Service
-public class FileStorageService {
+public class FileStorageUtil {
 
     public String getHomeDirectory() {
         return System.getProperty("user.home");

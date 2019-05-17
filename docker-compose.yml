@@ -1,7 +1,7 @@
 version: '3.7'
 services:
   postgres:
-    image: postgres:11.3
+    image: postgres:9.6
     environment:
       POSTGRES_USER: uploader
       POSTGRES_PASSWORD: uploader

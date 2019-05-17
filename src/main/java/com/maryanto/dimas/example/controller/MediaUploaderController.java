@@ -1,6 +1,7 @@
 package com.maryanto.dimas.example.controller;
 
-import com.maryanto.dimas.example.service.FileStorageService;
+import com.maryanto.dimas.example.entity.UploadMedia;
+import com.maryanto.dimas.example.service.UploadMediaService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.io.IOException;
 import java.util.List;
 
 @Slf4j
@@ -26,7 +28,7 @@ public class MediaUploaderController {
     private List<String> contentVideos;
 
     @Autowired
-    private FileStorageService storageService;
+    private UploadMediaService service;
 
     @PostMapping(
             value = "/upload/video",
@@ -35,7 +37,7 @@ public class MediaUploaderController {
                     MediaType.APPLICATION_OCTET_STREAM_VALUE}
     )
     public ResponseEntity<?> createVideo(
-            @RequestPart("content") @Valid @NotNull @NotEmpty MultipartFile file) {
+            @RequestPart("content") @Valid @NotNull @NotEmpty MultipartFile file) throws IOException {
         String contentType = file.getContentType();
 
         if (!contentVideos.contains(contentType)) {
@@ -43,7 +45,8 @@ public class MediaUploaderController {
             return ResponseEntity.badRequest().body("File bukan video!");
         }
 
-        return ResponseEntity.ok().build();
+        UploadMedia metaData = service.createFile(file);
+        return ResponseEntity.ok(metaData);
     }
 
 }
