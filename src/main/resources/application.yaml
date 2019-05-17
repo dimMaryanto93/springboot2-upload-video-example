@@ -2,14 +2,17 @@ server:
   port: 8080
   compression:
     enabled: true
+    min-response-size: 2KB
     mime-types: video/mpeg4-generic, video/mpeg, video/mp4, video/ogg, video/3gpp, video/x-matroska
+    ffmpeg: ${FFMPEG_PATH:ffmpeg}
+    ffprobe: ${FFPROBE_PATH:ffprobe}
 spring:
   application:
     name: uploader
   datasource:
-    url: jdbc:postgresql://localhost:5432/uploader
-    username: uploader
-    password: uploader
+    url: jdbc:postgresql://${POSTGRESQL_HOST:localhost}:${POSTGRESQL_PORT:5432}/${POSTGRESQL_DB:uploader}
+    username: ${POSTGRESQL_USERNAME:uploader}
+    password: ${POSTGRESQL_PASSWORD:uploader}
     driver-class-name: org.postgresql.Driver
   jpa:
     database: postgresql
@@ -18,8 +21,13 @@ spring:
       ddl-auto: validate
       use-new-id-generator-mappings: false
     show-sql: true
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
   flyway:
-    enabled: false
+    enabled: true
     baseline-on-migrate: true
     check-location: true
     clean-disabled: false
