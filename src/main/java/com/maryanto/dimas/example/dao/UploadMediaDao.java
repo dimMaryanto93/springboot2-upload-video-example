@@ -15,10 +15,6 @@ public class UploadMediaDao {
         return repository.save(value);
     }
 
-    public void write(UploadMedia value) {
-        repository.uploadFileSuccess(value.getId(), value.getOriginalFilePath());
-    }
-
     public void convert(UploadMedia value) {
         repository.convertFileSuccess(value.getId(), value.getCompressedFilePath());
     }
