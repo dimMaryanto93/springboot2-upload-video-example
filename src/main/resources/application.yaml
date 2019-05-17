@@ -1,0 +1,33 @@
+server:
+  port: 8080
+  compression:
+    enabled: true
+    mime-types: video/mpeg4-generic, video/mpeg, video/mp4, video/ogg, video/3gpp, video/x-matroska
+spring:
+  application:
+    name: uploader
+  datasource:
+    url: jdbc:postgresql://localhost:5432/uploader
+    username: uploader
+    password: uploader
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    database: postgresql
+    generate-ddl: false
+    hibernate:
+      ddl-auto: validate
+      use-new-id-generator-mappings: false
+    show-sql: true
+  flyway:
+    enabled: false
+    baseline-on-migrate: true
+    check-location: true
+    clean-disabled: false
+    clean-on-validation-error: true
+  servlet:
+    multipart:
+      enabled: true
+      max-request-size: 200MB
+      max-file-size: 200MB
+  mvc:
+    dispatch-options-request: true

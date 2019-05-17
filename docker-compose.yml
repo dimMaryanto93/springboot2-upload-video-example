@@ -1,0 +1,18 @@
+version: '3.7'
+services:
+  postgres:
+    image: postgres:11.3
+    environment:
+      POSTGRES_USER: uploader
+      POSTGRES_PASSWORD: uploader
+      POSTGRES_DB: uploader
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    networks:
+      - springboot2-uploader
+volumes:
+  pg_data:
+networks:
+  springboot2-uploader:

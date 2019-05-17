@@ -1,4 +1,4 @@
-package com.maryanto.dimas.example.springboot2videomediaexample;
+package com.maryanto.dimas.example;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -7,7 +7,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class Springboot2VideoMediaExampleApplicationTests {
+public class SpringbootUploadVideoApplicationTests {
 
 	@Test
 	public void contextLoads() {
