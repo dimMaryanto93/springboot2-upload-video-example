@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
@@ -26,8 +27,8 @@ public class UploadMediaService {
     @Transactional
     public UploadMedia createFile(MultipartFile file) throws IOException {
         UploadMedia media = new UploadMedia();
-        media.setOriginalFileName(file.getName());
-        media.setOriginalFileExtension(FilenameUtils.getExtension(file.getName()));
+        media.setOriginalFileName(Paths.get(file.getOriginalFilename()).getFileName().toString());
+        media.setOriginalFileExtension(FilenameUtils.getExtension(media.getOriginalFileName()));
         media.setCreatedDate(Timestamp.valueOf(LocalDateTime.now()));
         media.setWrite(false);
         media.setCompressed(false);
