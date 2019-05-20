@@ -10,6 +10,7 @@ public class FileUploadRoute extends RouteBuilder {
     public void configure() throws Exception {
         from("sql:select * from media where is_write = false order by created_date?onConsume=update media set is_write = true where id = :#id")
                 .log("${body}")
-                .to("bean:converterVideoExecute?method=execute");
+                .to("bean:converterVideoExecute?method=generateThumbnail")
+                .to("bean:converterVideoExecute?method=scaleVideo");
     }
 }

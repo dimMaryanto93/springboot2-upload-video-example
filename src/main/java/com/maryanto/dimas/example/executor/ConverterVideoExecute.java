@@ -20,7 +20,7 @@ public class ConverterVideoExecute {
     @Autowired
     private UploadMediaService service;
 
-    public void execute(Map<String, Object> value) {
+    public void scaleVideo(Map<String, Object> value) {
         UploadMedia media = new UploadMedia();
         media.setId(value.get("id").toString());
         media.setOriginalFilePath(value.get("original_path").toString());
@@ -29,6 +29,20 @@ public class ConverterVideoExecute {
             media.setCompressedFilePath(compressedPath);
             media.setCompressed(true);
             service.compressed(media);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void generateThumbnail(Map<String, Object> value) {
+        UploadMedia media = new UploadMedia();
+        media.setId(value.get("id").toString());
+        media.setOriginalFilePath(value.get("original_path").toString());
+        try {
+            String compressedPath = compress.generateThumbnail(media.getOriginalFilePath());
+            media.setThumbnailPath(compressedPath);
+            media.setThumbnail(true);
+            service.thumbnail(media);
         } catch (IOException e) {
             e.printStackTrace();
         }

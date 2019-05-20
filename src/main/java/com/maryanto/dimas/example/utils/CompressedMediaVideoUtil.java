@@ -23,8 +23,8 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class CompressedMediaVideoUtil {
 
-    FFmpeg ffmpeg = null;
-    FFprobe ffprobe = null;
+    private FFmpeg ffmpeg;
+    private FFprobe ffprobe;
 
     public String getHomeDirectory() {
         return System.getProperty("user.home");
@@ -41,6 +41,32 @@ public class CompressedMediaVideoUtil {
         if (!StringUtils.isEmpty(ffprobePath))
             ffprobe = new FFprobe(ffprobePath);
 
+    }
+
+    public String generateThumbnail(String fileName) throws IOException {
+        String dirPath = new StringBuilder(getHomeDirectory()).append(File.separator)
+                .append("Videos").append(File.separator)
+                .append("thumbnail").append(File.separator)
+                .append(LocalDate.now()).toString();
+
+        File dir = new File(dirPath);
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+
+        String outputLocation = new StringBuilder(dirPath)
+                .append(File.separator).append(UUID.randomUUID().toString()).append(".").append("png").toString();
+        FFmpegBuilder builder = new FFmpegBuilder();
+        FFmpegProbeResult input = ffprobe.probe(fileName);
+        builder.setInput(input)
+                .addOutput(outputLocation)
+                .setFrames(1)
+                .setVideoFilter("select='gte(n\\,10)',scale=200:-1")
+                .done();
+
+        FFmpegExecutor executor = new FFmpegExecutor(ffmpeg, ffprobe);
+        executor.createJob(builder).run();
+        return outputLocation;
     }
 
     public String convertVideo(String fileName, String format) throws IOException {
@@ -73,7 +99,7 @@ public class CompressedMediaVideoUtil {
 //                config video
                 .setVideoCodec("libx264")
                 .setVideoFrameRate(24, 1)
-                .setVideoResolution(640, 480)
+                .setVideoResolution(320, 240)
 
                 .setStrict(FFmpegBuilder.Strict.EXPERIMENTAL)
                 .done();

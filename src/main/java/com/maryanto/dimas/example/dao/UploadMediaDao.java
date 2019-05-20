@@ -18,4 +18,8 @@ public class UploadMediaDao {
     public void convert(UploadMedia value) {
         repository.convertFileSuccess(value.getId(), value.getCompressedFilePath());
     }
+
+    public void generateThumbnail(UploadMedia media) {
+        repository.generateThumbnail(media.getId(), media.getThumbnailPath());
+    }
 }

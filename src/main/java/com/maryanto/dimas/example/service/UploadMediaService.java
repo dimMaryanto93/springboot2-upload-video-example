@@ -3,6 +3,7 @@ package com.maryanto.dimas.example.service;
 import com.maryanto.dimas.example.dao.UploadMediaDao;
 import com.maryanto.dimas.example.entity.UploadMedia;
 import com.maryanto.dimas.example.utils.FileStorageUtil;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +26,8 @@ public class UploadMediaService {
     @Transactional
     public UploadMedia createFile(MultipartFile file) throws IOException {
         UploadMedia media = new UploadMedia();
+        media.setOriginalFileName(file.getName());
+        media.setOriginalFileExtension(FilenameUtils.getExtension(file.getName()));
         media.setCreatedDate(Timestamp.valueOf(LocalDateTime.now()));
         media.setWrite(false);
         media.setCompressed(false);
@@ -36,6 +39,11 @@ public class UploadMediaService {
     @Transactional
     public void compressed(UploadMedia media){
         dao.convert(media);
+    }
+
+    @Transactional
+    public void thumbnail(UploadMedia media){
+        dao.generateThumbnail(media);
     }
 
 
