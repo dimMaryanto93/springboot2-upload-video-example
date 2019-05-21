@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -23,6 +24,14 @@ public class UploadMediaService {
 
     @Autowired
     private FileStorageUtil storageUtil;
+
+    public byte[] getFile(String path) throws IOException {
+        return storageUtil.getFile(path);
+    }
+
+    public Optional<UploadMedia> findById(String id) {
+        return dao.findById(id);
+    }
 
     @Transactional
     public UploadMedia createFile(MultipartFile file) throws IOException {
@@ -38,14 +47,13 @@ public class UploadMediaService {
     }
 
     @Transactional
-    public void compressed(UploadMedia media){
+    public void compressed(UploadMedia media) {
         dao.convert(media);
     }
 
     @Transactional
-    public void thumbnail(UploadMedia media){
+    public void thumbnail(UploadMedia media) {
         dao.generateThumbnail(media);
     }
-
 
 }

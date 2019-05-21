@@ -1,5 +1,6 @@
 package com.maryanto.dimas.example.utils;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -40,6 +41,15 @@ public class FileStorageUtil {
         Path path = Paths.get(location);
         Files.write(path, file.getBytes());
         return location;
+    }
+
+    public byte[] getFile(String path) throws IOException {
+        File file = new File(path);
+        byte[] b = null;
+        if (file.exists()) {
+            b = FileUtils.readFileToByteArray(file);
+        }
+        return b;
     }
 
 }
