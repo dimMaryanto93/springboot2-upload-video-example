@@ -52,7 +52,7 @@ public class MediaUploaderController {
     }
 
     @GetMapping("/download/{id}/thumbnail")
-    public ResponseEntity<?> getThumbnailById(@PathVariable("id") String id) {
+    public ResponseEntity<?> getThumbnailById(@PathVariable("id") @NotNull @NotEmpty String id) {
         Optional<UploadMedia> mediaOptional = service.findById(id);
         if (!mediaOptional.isPresent()) {
             return noContent().build();
@@ -68,6 +68,50 @@ public class MediaUploaderController {
             byte[] file = service.getFile(path);
             String encodeString = Base64.getEncoder().encodeToString(file);
             return ok(encodeString);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/download/{id}/video/original")
+    public ResponseEntity<?> getVideoOriginal(@PathVariable("id") @NotNull @NotEmpty String id) {
+        Optional<UploadMedia> mediaOptional = service.findById(id);
+        if (!mediaOptional.isPresent()) {
+            return noContent().build();
+        }
+
+        UploadMedia media = mediaOptional.get();
+        if (!media.isWrite()) {
+            return new ResponseEntity<>(HttpStatus.LOCKED);
+        }
+
+        String path = media.getOriginalFilePath();
+        try {
+            byte[] file = service.getFile(path);
+            return ok(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/download/{id}/video/compressed")
+    public ResponseEntity<?> getVideoCompressed(@PathVariable("id") @NotNull @NotEmpty String id) {
+        Optional<UploadMedia> mediaOptional = service.findById(id);
+        if (!mediaOptional.isPresent()) {
+            return noContent().build();
+        }
+
+        UploadMedia media = mediaOptional.get();
+        if (!media.isCompressed()) {
+            return new ResponseEntity<>(HttpStatus.LOCKED);
+        }
+
+        String path = media.getCompressedFilePath();
+        try {
+            byte[] file = service.getFile(path);
+            return ok(file);
         } catch (IOException e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
