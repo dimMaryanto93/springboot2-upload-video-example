@@ -20,19 +20,28 @@ create user uploader with superuser login password 'uploader';
 create database uploader;
 ```
 
-or via docker-compose
-
-```docker
-docker-compose up -d
-```
-
 run springboot project:
 
 ```bash
 mvn clean spring-boot:run
 ```
 
-example Rest API
+## Run Application with docker-componse
+
+Build image using maven command:
+
+```bash
+mvn clean install -DskipTests
+```
+
+it's will build the image, then you can run the container with docker-compose
+
+```docker
+docker-compose up -d
+```
+
+
+## example Rest API
 
 ```bash
 curl -X POST \

@@ -12,6 +12,25 @@ services:
       - 5432:5432
     networks:
       - springboot2-uploader
+  springboot-upload-video:
+    image: springboot-uploader:0.0.1
+    environment:
+      POSTGRESQL_HOST: postgres
+      POSTGRESQL_PORT: 5432
+      POSTGRESQL_DB: uploader
+      POSTGRESQL_USERNAME: uploader
+      POSTGRESQL_PASSWORD: uploader
+    entrypoint:
+      - "java"
+      - '-jar'
+      - "-Djava.security.egd=file:/dev/./urandom"
+      - "/var/applications/application.jar"
+    networks:
+      - springboot2-uploader
+    ports:
+      - 8080:8080
+    depends_on:
+      - postgres
 volumes:
   pg_data:
 networks:
