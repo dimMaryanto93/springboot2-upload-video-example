@@ -36,8 +36,7 @@ public class MediaUploaderController {
             value = "/upload/video",
             consumes = {
                     MediaType.MULTIPART_FORM_DATA_VALUE,
-                    MediaType.APPLICATION_OCTET_STREAM_VALUE}
-    )
+                    MediaType.APPLICATION_OCTET_STREAM_VALUE})
     public ResponseEntity<?> createVideo(
             @RequestPart("content") @Valid @NotNull @NotEmpty MultipartFile file) throws IOException {
         String contentType = file.getContentType();
