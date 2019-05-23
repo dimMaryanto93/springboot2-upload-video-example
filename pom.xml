@@ -18,8 +18,8 @@
         <java.version>1.8</java.version>
         <swagger.version>2.9.2</swagger.version>
         <docker-registry.username>example</docker-registry.username>
-        <docker-registry.host.push>repository.dimas-maryanto.com:8087/</docker-registry.host.push>
-        <docker-registry.host.pull>repository.dimas-maryanto.com:8086/</docker-registry.host.pull>
+        <docker-registry.host.push>repository.dimas-maryanto.com:8087</docker-registry.host.push>
+        <docker-registry.host.pull>repository.dimas-maryanto.com:8086</docker-registry.host.pull>
         <finalName>${project.artifactId}-${project.version}</finalName>
     </properties>
 
@@ -158,14 +158,14 @@
                 <executions>
                     <execution>
                         <id>build-image</id>
-                        <phase>install</phase>
+                        <phase>package</phase>
                         <goals>
                             <goal>build</goal>
                         </goals>
                     </execution>
                     <execution>
                         <id>tag-image</id>
-                        <phase>deploy</phase>
+                        <phase>install</phase>
                         <goals>
                             <goal>tag</goal>
                         </goals>
@@ -173,26 +173,26 @@
                             <forceTags>true</forceTags>
                             <image>${project.artifactId}:${project.version}</image>
                             <newName>
-                                ${docker-registry.host.push}${docker-registry.username}/${project.artifactId}:${project.version}
+                                ${docker-registry.host.push}/${docker-registry.username}/${project.artifactId}:${project.version}
                             </newName>
                         </configuration>
                     </execution>
                     <execution>
                         <id>push-image</id>
-                        <phase>deploy</phase>
+                        <phase>install</phase>
                         <goals>
                             <goal>push</goal>
                         </goals>
                         <configuration>
                             <retryPushCount>2</retryPushCount>
                             <imageName>
-                                ${docker-registry.host.push}${docker-registry.username}/${project.artifactId}:${project.version}
+                                ${docker-registry.host.push}/${docker-registry.username}/${project.artifactId}:${project.version}
                             </imageName>
                         </configuration>
                     </execution>
                 </executions>
                 <configuration>
-                    <baseImage>${docker-registry.host.pull}openjdk:8-jdk-alpine</baseImage>
+                    <baseImage>${docker-registry.host.pull}/openjdk8-ffmpeg:1.0.0-release</baseImage>
                     <imageName>${project.artifactId}:${project.version}</imageName>
                     <resources>
                         <resource>
@@ -209,23 +209,6 @@
                     <runs>
                         <run>
                             ln -s /var/applications/${project.build.finalName}.jar var/applications/application.jar
-                        </run>
-                        <run>
-                            apk add --update build-base curl nasm tar bzip2 \
-                            zlib-dev yasm-dev lame-dev libogg-dev x264-dev \
-                            libvpx-dev libvorbis-dev x265-dev freetype-dev \
-                            libass-dev libwebp-dev rtmpdump-dev libtheora-dev opus-dev
-                        </run>
-                        <run>
-                            cd /opt &amp;&amp; \
-                            wget -c https://ffmpeg.org/releases/ffmpeg-4.1.3.tar.bz2 &amp;&amp; \
-                            tar -xvjf ffmpeg-4.1.3.tar.bz2 &amp;&amp; \
-                            cd /opt/ffmpeg-4.1.3 &amp;&amp; \
-                            ./configure --enable-version3 --enable-gpl --enable-nonfree --enable-small --enable-libmp3lame --enable-libx264 --enable-libx265 --enable-libvpx --enable-libtheora --enable-libvorbis --enable-libopus --enable-libass --enable-libwebp --enable-librtmp --enable-postproc --enable-avresample --enable-libfreetype --disable-debug &amp;&amp; \
-                            make &amp;&amp; \
-                            make install &amp;&amp; \
-                            make distclean &amp;&amp; \
-                            apk del build-base curl tar bzip2 x264 openssl nasm &amp;&amp; rm -rf /var/cache/apk/*
                         </run>
                     </runs>
                     <maintainer>Dimas Maryanto (software.dimas_m@icloud.com)</maintainer>
